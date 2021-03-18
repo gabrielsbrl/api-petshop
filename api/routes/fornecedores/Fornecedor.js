@@ -14,6 +14,8 @@ class Fornecedor {
 
     async criar() {
         
+        this.validar();
+
         const resultado = await TabelaFornecedor.inserir({
             empresa: this.empresa,
             email: this.email,
@@ -50,6 +52,20 @@ class Fornecedor {
             throw new Error('Dados não fornecidos para atualização de fornecedor!');
         }
         await TabelaFornecedor.atualizar(this.id, dadosParaAtualizar);
+    }
+    
+    remover() {
+        return TabelaFornecedor.remover(this.id);
+    }
+
+    validar() {
+        const campos = ['empresa', 'email', 'categoria'];
+        campos.forEach(c => {
+            const valor = this[c];
+            if(typeof valor !== 'string' || valor.length === 0) {
+                throw new Error(`Campo ${c} está inválido!`);
+            }
+        });
     }
 }
 

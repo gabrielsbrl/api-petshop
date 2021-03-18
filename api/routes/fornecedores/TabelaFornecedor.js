@@ -26,5 +26,10 @@ module.exports = {
                 where: { id }
             }
         );
+    },
+    remover(id) {
+        return ModeloFornecedor.destroy({
+            where: { id }
+        });
     }
 };

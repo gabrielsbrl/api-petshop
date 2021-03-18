@@ -22,10 +22,16 @@ router.get('/:idFornecedor', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-    const dadosRecebidos = req.body;
-    const fornecedor = new Fornecedor(dadosRecebidos);
-    await fornecedor.criar();
-    res.send(JSON.stringify(fornecedor));
+    try {
+        const dadosRecebidos = req.body;
+        const fornecedor = new Fornecedor(dadosRecebidos);
+        await fornecedor.criar();
+        res.send(JSON.stringify(fornecedor));
+    } catch(erro) {
+        res.send(JSON.stringify({
+            mensagem: erro.message
+        }));
+    }    
 });
 
 router.put('/:idFornecedor', async (req, res) => {
@@ -37,6 +43,19 @@ router.put('/:idFornecedor', async (req, res) => {
         await fornecedor.atualizar();
         res.status(204).end();
     } catch(erro) {
+        res.status(500).send(JSON.stringify({ message: erro.message }));
+    }
+});
+
+router.delete('/:idFornecedor', async (req, res) => {
+    try {
+        const idFornecedor = req.params.idFornecedor;
+        const fornecedor = new Fornecedor({ id: idFornecedor });
+        await fornecedor.carregar();
+        await fornecedor.remover();
+        res.status(200).end();
+    }
+    catch(erro) {
         res.status(500).send(JSON.stringify({ message: erro.message }));
     }
 });
